@@ -10,14 +10,16 @@
 </nav>
 
 <section class="jumbotron bg-light text-center">
-  <h1>Polls Rethinked</h1>
+  <h1>Polls Rethinked!</h1>
   <p class="lead text-muted">Powered by Blockchain</p>
 </section>
 
 <app-poll-create *ngIf="showForm"></app-poll-create>
 
 <div class="d-flex">
-  <div class="container poll-list">List</div>
+  <div class="container poll-list">
+    <app-poll></app-poll>
+  </div>
 
   <div class="container poll-details">Details</div>
 </div>
