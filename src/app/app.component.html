@@ -1,6 +1,7 @@
 <nav class="navbar navbar-light bg-light">
   <a class="navbar-brand mr-auto" href="#">Blockchain Polls</a>
   <button
+    (click)="showForm = !showForm"
     type="button"
     class="btn btn-secondary"
   >
@@ -13,14 +14,10 @@
   <p class="lead text-muted">Powered by Blockchain</p>
 </section>
 
-<app-poll-create></app-poll-create>
+<app-poll-create *ngIf="showForm"></app-poll-create>
 
 <div class="d-flex">
-  <div class="container poll-list">
-    List
-  </div>
+  <div class="container poll-list">List</div>
 
-  <div class="container poll-details">
-    Details
-  </div>
+  <div class="container poll-details">Details</div>
 </div>

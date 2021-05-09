@@ -1,4 +1,6 @@
 <form
+  [formGroup]="pollForm"
+  (ngSubmit)="submitForm()"
   class="container col-sm-6"
 >
   <div class="form-group row">
