@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
-import { from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 
 const contractABI = require('./contractABI.json');
 declare var window: any;
@@ -13,7 +13,7 @@ export class Web3Service {
   private contract: Contract;
   private contractAddress = '0x260a020e0aE9CF441CE87BDa796d7365F16928BD';
 
-  constructor() {
+  constructor(private zone: NgZone) {
     if (window.web3) {
       this.web3 = new Web3(window.ethereum);
       this.contract = new this.web3.eth.Contract(
@@ -41,5 +41,22 @@ export class Web3Service {
   async call(fnName: string, ...args: any) {
     const acc = await this.getAccount();
     return this.contract.methods[fnName](...args).call({ from: acc });
+  }
+
+  onEvents(event: string) {
+    return new Observable((observer) => {
+      this.contract.events[event]().on(
+        'data',
+        (data: { event: any; returnValues: any }) => {
+          //this must run inside angular zone as its listening for 'on'
+          this.zone.run(() => {
+            observer.next({
+              event: data.event,
+              payload: data.returnValues,
+            });
+          });
+        }
+      );
+    });
   }
 }
