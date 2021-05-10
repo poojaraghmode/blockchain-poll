@@ -4,6 +4,7 @@ export interface Poll{
   question: string; //Which days of the week you like the most?
   options: string[]; // ["Monday", "Tuesday", "wednesday" ... ]
   image: string; //https://image.png
+  voted: boolean; //true
 }
 
 export interface Voter{
