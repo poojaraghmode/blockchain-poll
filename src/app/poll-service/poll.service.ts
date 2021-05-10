@@ -11,26 +11,21 @@ import { fromAscii } from 'web3-utils';
 export class PollService {
   constructor(private web3: Web3Service) {}
 
-  getPolls(): Observable<Poll[]> {
-    return of([
-      {
-        id: 1,
-        question: 'Do you like Dogs or Cats?',
-        image: 'https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg',
-        options: ['Cats', 'Dogs', 'None'],
-        results: [7, 5, 1],
-        voted: true,
-      },
-      {
-        id: 2,
-        question: 'Whats your fav day?',
-        image:
-          'https://images.pexels.com/photos/1118448/pexels-photo-1118448.jpeg',
-        options: ['Monday', 'Saturday', 'Sunday'],
-        results: [0, 2, 7],
-        voted: false,
-      },
-    ]).pipe(delay(2000));
+  async getPolls(): Promise<Poll[]>{
+    const polls: Poll[] = [];
+
+    const totalPolls = await this.web3.call('getTotalPolls');
+
+    const acc = await this.web3.getAccount();
+    const voter = await this.web3.call('getVoter', acc);
+
+    for(let i = 0; i < totalPolls; i++){
+      const poll = await this.web3.call("getPoll", i);
+      polls.push(poll);
+    }
+
+    return polls;
+
   }
 
   vote(pollID: number, voteNumber: number) {
