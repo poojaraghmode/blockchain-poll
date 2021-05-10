@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
+import { from } from 'rxjs';
 
 const contractABI = require("./contractABI.json");
 declare var window: any;
@@ -24,5 +25,14 @@ export class Web3Service {
     }else{
       console.warn("Metamask not found. Please Install or Enable Metamask!")
     }
+  }
+
+  getAccount():Promise<string> {
+    return this.web3.eth.getAccounts().then((accounts) => accounts[0] || '');
+  }
+
+  async executeTransaction(fnName: string, ...args: any): Promise<void> {
+    const acc = await this.getAccount();
+    this.contract.methods[fnName](...args).send({from: acc});
   }
 }
